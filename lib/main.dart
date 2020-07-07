@@ -55,13 +55,17 @@ class QuickAlarmState extends State<QuickAlarm> {
     super.dispose();
   }
 
-  Widget showButton() {
-    if (alarmState == 'IN_PLACE') {
-      return Text('Alarm already placed');
-    }
+  List<Widget> showButtons() {
+    List<Widget> widgetList = new List();
 
-    if (alarmState == 'BUZZING') {
-      return new RaisedButton(
+    if (alarmState == 'IN_PLACE') {
+      widgetList.add(
+        Text(
+          'Alarm already placed',
+        ),
+      );
+    } else if (alarmState == 'BUZZING') {
+      widgetList.add(RaisedButton(
         child: Icon(
           Icons.alarm_off,
           size: 100.0,
@@ -70,19 +74,31 @@ class QuickAlarmState extends State<QuickAlarm> {
           Scheduler().stopAlarm();
         },
         color: Colors.white,
+      ));
+      widgetList.add(
+        new Text(
+          'Stop alarm',
+        ),
+      );
+    } else {
+      widgetList.add(new RaisedButton(
+        child: Icon(
+          Icons.alarm,
+          size: 100.0,
+        ),
+        onPressed: () {
+          Scheduler().setupAlarm();
+        },
+        color: Colors.white,
+      ));
+      widgetList.add(
+        new Text(
+          'Setup alarm',
+        ),
       );
     }
 
-    return new RaisedButton(
-      child: Icon(
-        Icons.alarm,
-        size: 100.0,
-      ),
-      onPressed: () {
-        Scheduler().setupAlarm();
-      },
-      color: Colors.white,
-    );
+    return widgetList;
   }
 
   @override
@@ -94,11 +110,11 @@ class QuickAlarmState extends State<QuickAlarm> {
           child: new Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Expanded(
-                // 1st use Expanded
-                child: Center(
-                  child: showButton(),
-                ), // 2nd wrap your widget in Center
+              new Container(
+                child: new Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: showButtons(),
+                ),
               ),
             ],
           ),

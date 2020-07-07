@@ -22,8 +22,8 @@ class Scheduler {
     AppEvents.setAlarmState('BUZZING');
 
     FlutterRingtonePlayer.playRingtone(
-      looping: false,
-      volume: 0.1,
+      looping: true,
+      volume: 1.0,
       asAlarm: true,
     );
   }
