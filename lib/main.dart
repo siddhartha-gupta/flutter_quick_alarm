@@ -10,7 +10,9 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:circular_countdown/circular_countdown.dart';
 
+part './AppConst.dart';
 part './AppEvents.dart';
 part './Scheduler.dart';
 part './StorageService.dart';
@@ -36,7 +38,8 @@ class QuickAlarmState extends State<QuickAlarm> {
   void initState() {
     super.initState();
 
-    IsolateNameServer.registerPortWithName(receivePort.sendPort, 'MyAppPort');
+    IsolateNameServer.registerPortWithName(
+        receivePort.sendPort, AppConst.MAIN_PORT_NAME);
     receivePort.listen((v) {
       Scheduler().buzzAlarm();
     });
@@ -59,9 +62,32 @@ class QuickAlarmState extends State<QuickAlarm> {
     List<Widget> widgetList = new List();
 
     if (alarmState == 'IN_PLACE') {
+      var diff = (int.tryParse(StorageService.getItem('timestamp')) -
+              new DateTime.now().millisecondsSinceEpoch) /
+          1000;
+
       widgetList.add(
         Text(
           'Alarm already placed',
+          style: TextStyle(
+            color: Colors.amber,
+            fontSize: 30.0,
+          ),
+        ),
+      );
+      widgetList.add(
+        new Padding(
+          padding: EdgeInsets.only(
+            bottom: 20,
+          ),
+        ),
+      );
+      widgetList.add(
+        TimeCircularCountdown(
+          unit: CountdownUnit.second,
+          countdownTotal: diff.toInt(),
+          diameter: 200,
+          countdownCurrentColor: Colors.amber,
         ),
       );
     } else if (alarmState == 'BUZZING') {
@@ -78,6 +104,10 @@ class QuickAlarmState extends State<QuickAlarm> {
       widgetList.add(
         new Text(
           'Stop alarm',
+          style: TextStyle(
+            color: Colors.amber,
+            fontSize: 40.0,
+          ),
         ),
       );
     } else {
@@ -94,6 +124,10 @@ class QuickAlarmState extends State<QuickAlarm> {
       widgetList.add(
         new Text(
           'Setup alarm',
+          style: TextStyle(
+            color: Colors.amber,
+            fontSize: 40.0,
+          ),
         ),
       );
     }
@@ -106,6 +140,7 @@ class QuickAlarmState extends State<QuickAlarm> {
     return new MaterialApp(
       title: 'Quick alarm',
       home: new Scaffold(
+        backgroundColor: Colors.grey[900],
         body: Center(
           child: new Row(
             mainAxisAlignment: MainAxisAlignment.center,
