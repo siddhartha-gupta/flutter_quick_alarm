@@ -8,28 +8,31 @@ class CountDownWidget extends StatefulWidget {
 }
 
 class CountDownWidgetState extends State<CountDownWidget> {
-  ReceivePort receivePort = ReceivePort();
+  int remainingTime = 0;
 
   @override
   void initState() {
     super.initState();
 
-    IsolateNameServer.registerPortWithName(
-        receivePort.sendPort, AppConst.TIMER_PORT_NAME);
-    receivePort.listen((v) {
-      Scheduler().buzzAlarm();
+    CountDownTimer.receivePort.listen((data) {
+      debugPrint('RECEIVE: ' + data + ', ');
+      setState(() {
+        remainingTime = int.tryParse(data);
+      });
     });
   }
 
   @override
   void dispose() {
+    CountDownTimer.receivePort.close();
+
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Text(
-      'Alarm placed for ${AppConst.TIMER_MINUTES} mins',
+      'Remaining: $remainingTime seconds',
       style: TextStyle(
         color: Colors.amber,
         fontSize: 25.0,
