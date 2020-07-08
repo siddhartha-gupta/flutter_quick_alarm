@@ -3,16 +3,12 @@ part of quick_alarm;
 class Scheduler {
   setupAlarm() async {
     print('Setting up alarm!');
-    var minutes = AppConst.TIMER_MINUTES;
-    var timstamp = new DateTime.now()
-        .add(Duration(minutes: minutes))
-        .millisecondsSinceEpoch;
 
     AppEvents.setAlarmState('IN_PLACE');
-    StorageService.setItem('timestamp', timstamp.toString());
+    CountDownTimer.start();
 
     final success = await AndroidAlarmManager.oneShot(
-      Duration(minutes: minutes),
+      Duration(minutes: AppConst.TIMER_MINUTES),
       42,
       callback,
       wakeup: true,
@@ -25,12 +21,13 @@ class Scheduler {
     SendPort sendPort =
         IsolateNameServer.lookupPortByName(AppConst.MAIN_PORT_NAME);
     if (sendPort != null) {
-      sendPort.send("DONE");
+      sendPort.send('DONE');
     }
   }
 
   buzzAlarm() {
     AppEvents.setAlarmState('BUZZING');
+    CountDownTimer.stop();
 
     FlutterRingtonePlayer.play(
       android: AndroidSounds.ringtone,

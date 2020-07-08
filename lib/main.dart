@@ -15,7 +15,9 @@ import 'package:circular_countdown/circular_countdown.dart';
 part './AppConst.dart';
 part './AppEvents.dart';
 part './Scheduler.dart';
+part './CountDownTimer.dart';
 part './StorageService.dart';
+part './CountDownWidget.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -62,16 +64,12 @@ class QuickAlarmState extends State<QuickAlarm> {
     List<Widget> widgetList = new List();
 
     if (alarmState == 'IN_PLACE') {
-      var diff = (int.tryParse(StorageService.getItem('timestamp')) -
-              new DateTime.now().millisecondsSinceEpoch) /
-          1000;
-
       widgetList.add(
         Text(
-          'Alarm already placed',
+          'Alarm placed for ${AppConst.TIMER_MINUTES} mins',
           style: TextStyle(
             color: Colors.amber,
-            fontSize: 30.0,
+            fontSize: 25.0,
           ),
         ),
       );
@@ -83,24 +81,21 @@ class QuickAlarmState extends State<QuickAlarm> {
         ),
       );
       widgetList.add(
-        TimeCircularCountdown(
-          unit: CountdownUnit.second,
-          countdownTotal: diff.toInt(),
-          diameter: 200,
-          countdownCurrentColor: Colors.amber,
-        ),
+        CountDownWidget(),
       );
     } else if (alarmState == 'BUZZING') {
-      widgetList.add(RaisedButton(
-        child: Icon(
-          Icons.alarm_off,
-          size: 100.0,
+      widgetList.add(
+        RaisedButton(
+          child: Icon(
+            Icons.alarm_off,
+            size: 100.0,
+          ),
+          onPressed: () {
+            Scheduler().stopAlarm();
+          },
+          color: Colors.white,
         ),
-        onPressed: () {
-          Scheduler().stopAlarm();
-        },
-        color: Colors.white,
-      ));
+      );
       widgetList.add(
         new Text(
           'Stop alarm',
