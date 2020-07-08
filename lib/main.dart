@@ -10,7 +10,6 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:circular_countdown/circular_countdown.dart';
 
 part './AppConst.dart';
 part './AppEvents.dart';
