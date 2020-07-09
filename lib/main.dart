@@ -13,7 +13,6 @@ import 'package:rxdart/rxdart.dart';
 part './AppConst.dart';
 part './AppEvents.dart';
 part 'services/SchedulerService.dart';
-part 'services/CountDownService.dart';
 part 'services/StorageService.dart';
 part 'widgets/CountDownWidget.dart';
 part 'widgets/AlarmInPlaceWidget.dart';
@@ -33,7 +32,7 @@ class QuickAlarm extends StatefulWidget {
 }
 
 class QuickAlarmState extends State<QuickAlarm> {
-  ReceivePort receivePort = ReceivePort();
+  ReceivePort receivePort1 = ReceivePort();
   StreamSubscription<String> alarmStateStream;
   String alarmState = 'NO_ALARM';
 
@@ -42,8 +41,9 @@ class QuickAlarmState extends State<QuickAlarm> {
     super.initState();
 
     IsolateNameServer.registerPortWithName(
-        receivePort.sendPort, AppConst.MAIN_PORT_NAME);
-    receivePort.listen((v) {
+        receivePort1.sendPort, AppConst.MAIN_PORT_NAME);
+
+    receivePort1.listen((v) {
       SchedulerService().buzzAlarm();
     });
 

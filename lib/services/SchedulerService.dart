@@ -4,8 +4,11 @@ class SchedulerService {
   setupAlarm() async {
     print('Setting up alarm!');
 
+    int timer = DateTime.now().millisecondsSinceEpoch +
+        (AppConst.TIMER_MINUTES * 60 * 1000);
+
     AppEvents.setAlarmState('IN_PLACE');
-    CountDownService.start();
+    StorageService.setInteger('timestamp', timer);
 
     final success = await AndroidAlarmManager.oneShot(
       Duration(minutes: AppConst.TIMER_MINUTES),
@@ -27,22 +30,22 @@ class SchedulerService {
 
   buzzAlarm() {
     AppEvents.setAlarmState('BUZZING');
-    CountDownService.stop();
+    StorageService.setInteger('timestamp', 0);
 
     print('buzzAlarm');
-    FlutterRingtonePlayer.play(
+    /* FlutterRingtonePlayer.play(
       android: AndroidSounds.ringtone,
       ios: IosSounds.glass,
       looping: true,
       volume: 1.0,
       asAlarm: true,
-    );
+    ); */
   }
 
   stopAlarm() {
     AppEvents.setAlarmState('NO_ALARM');
     print('stopAlarm');
 
-    FlutterRingtonePlayer.stop();
+    // FlutterRingtonePlayer.stop();
   }
 }

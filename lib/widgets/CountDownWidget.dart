@@ -9,22 +9,36 @@ class CountDownWidget extends StatefulWidget {
 
 class CountDownWidgetState extends State<CountDownWidget> {
   int remainingTime = 0;
+  StreamSubscription<int> countdownTimerStream;
 
   @override
   void initState() {
     super.initState();
 
-    CountDownService.receivePort.listen((data) {
-      debugPrint('RECEIVE: ' + data + ', ');
-      setState(() {
-        remainingTime = int.tryParse(data);
-      });
-    });
+    runTimer();
+  }
+
+  runTimer() {
+    Timer.periodic(
+      Duration(seconds: 1),
+      (timer) {
+        int diff = (StorageService.getInteger('timestamp') -
+            DateTime.now().millisecondsSinceEpoch);
+        diff = diff ~/ 1000;
+
+        if (diff == 1) {
+          timer.cancel();
+        }
+        setState(() {
+          remainingTime = diff;
+        });
+      },
+    );
   }
 
   @override
   void dispose() {
-    CountDownService.receivePort.close();
+    countdownTimerStream.cancel();
 
     super.dispose();
   }

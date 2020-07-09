@@ -9,11 +9,19 @@ class StorageService {
     return Future<bool>.value(true);
   }
 
-  static void setItem(String key, String value) {
+  static void setString(String key, String value) {
     StorageService.prefs.setString(key, value);
   }
 
-  static String getItem(String key) {
+  static String getString(String key) {
     return StorageService.prefs.getString(key);
+  }
+
+  static void setInteger(String key, int value) {
+    StorageService.prefs.setInt(key, value);
+  }
+
+  static int getInteger(String key) {
+    return StorageService.prefs.getInt(key);
   }
 }
