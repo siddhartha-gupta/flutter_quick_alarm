@@ -9,7 +9,6 @@ class CountDownWidget extends StatefulWidget {
 
 class CountDownWidgetState extends State<CountDownWidget> {
   int remainingTime = 0;
-  StreamSubscription<int> countdownTimerStream;
 
   @override
   void initState() {
@@ -27,6 +26,7 @@ class CountDownWidgetState extends State<CountDownWidget> {
         diff = diff ~/ 1000;
 
         if (diff == 1) {
+          print('cancelling timer');
           timer.cancel();
         }
         setState(() {
@@ -38,8 +38,6 @@ class CountDownWidgetState extends State<CountDownWidget> {
 
   @override
   void dispose() {
-    countdownTimerStream.cancel();
-
     super.dispose();
   }
 
