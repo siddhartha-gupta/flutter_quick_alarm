@@ -29,6 +29,7 @@ class SchedulerService {
     AppEvents.setAlarmState('BUZZING');
     CountDownService.stop();
 
+    print('buzzAlarm');
     FlutterRingtonePlayer.play(
       android: AndroidSounds.ringtone,
       ios: IosSounds.glass,
@@ -40,6 +41,7 @@ class SchedulerService {
 
   stopAlarm() {
     AppEvents.setAlarmState('NO_ALARM');
+    print('stopAlarm');
 
     FlutterRingtonePlayer.stop();
   }
