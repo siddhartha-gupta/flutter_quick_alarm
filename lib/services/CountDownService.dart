@@ -1,14 +1,13 @@
 part of quick_alarm;
 
-class CountDownTimer {
+class CountDownService {
   static Isolate isolate;
   static ReceivePort receivePort;
 
   static void start() async {
-    // StorageService.setItem('timestamp', timstamp.toString());
-    CountDownTimer.receivePort = ReceivePort();
-    CountDownTimer.isolate = await Isolate.spawn(
-      CountDownTimer.runTimer,
+    CountDownService.receivePort = ReceivePort();
+    CountDownService.isolate = await Isolate.spawn(
+      CountDownService.runTimer,
       receivePort.sendPort,
     );
   }

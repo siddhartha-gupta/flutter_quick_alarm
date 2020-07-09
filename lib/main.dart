@@ -3,7 +3,6 @@ library quick_alarm;
 import 'dart:async';
 import 'dart:isolate';
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:android_alarm_manager/android_alarm_manager.dart';
 import 'package:flutter/widgets.dart';
@@ -13,10 +12,13 @@ import 'package:rxdart/rxdart.dart';
 
 part './AppConst.dart';
 part './AppEvents.dart';
-part './Scheduler.dart';
-part './CountDownTimer.dart';
-part './StorageService.dart';
-part './CountDownWidget.dart';
+part 'services/SchedulerService.dart';
+part 'services/CountDownService.dart';
+part 'services/StorageService.dart';
+part 'widgets/CountDownWidget.dart';
+part 'widgets/AlarmInPlaceWidget.dart';
+part 'widgets/SetupAlarmWidget.dart';
+part 'widgets/StopAlarmWidget.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -42,7 +44,7 @@ class QuickAlarmState extends State<QuickAlarm> {
     IsolateNameServer.registerPortWithName(
         receivePort.sendPort, AppConst.MAIN_PORT_NAME);
     receivePort.listen((v) {
-      Scheduler().buzzAlarm();
+      SchedulerService().buzzAlarm();
     });
 
     alarmStateStream = AppEvents.alarmState.listen((value) {
@@ -59,74 +61,17 @@ class QuickAlarmState extends State<QuickAlarm> {
     super.dispose();
   }
 
-  List<Widget> showButtons() {
-    List<Widget> widgetList = new List();
+  Widget showButtons() {
+    switch (alarmState) {
+      case 'IN_PLACE':
+        return new AlarmInPlaceWidget();
 
-    if (alarmState == 'IN_PLACE') {
-      widgetList.add(
-        Text(
-          'Alarm placed for ${AppConst.TIMER_MINUTES} mins',
-          style: TextStyle(
-            color: Colors.amber,
-            fontSize: 25.0,
-          ),
-        ),
-      );
-      widgetList.add(
-        new Padding(
-          padding: EdgeInsets.only(
-            bottom: 20,
-          ),
-        ),
-      );
-      widgetList.add(
-        CountDownWidget(),
-      );
-    } else if (alarmState == 'BUZZING') {
-      widgetList.add(
-        RaisedButton(
-          child: Icon(
-            Icons.alarm_off,
-            size: 100.0,
-          ),
-          onPressed: () {
-            Scheduler().stopAlarm();
-          },
-          color: Colors.white,
-        ),
-      );
-      widgetList.add(
-        new Text(
-          'Stop alarm',
-          style: TextStyle(
-            color: Colors.amber,
-            fontSize: 40.0,
-          ),
-        ),
-      );
-    } else {
-      widgetList.add(new RaisedButton(
-        child: Icon(
-          Icons.alarm,
-          size: 100.0,
-        ),
-        onPressed: () {
-          Scheduler().setupAlarm();
-        },
-        color: Colors.white,
-      ));
-      widgetList.add(
-        new Text(
-          'Setup alarm',
-          style: TextStyle(
-            color: Colors.amber,
-            fontSize: 40.0,
-          ),
-        ),
-      );
+      case 'BUZZING':
+        return new StopAlarmWidget();
+
+      default:
+        return new SetupAlarmWidget();
     }
-
-    return widgetList;
   }
 
   @override
@@ -139,12 +84,7 @@ class QuickAlarmState extends State<QuickAlarm> {
           child: new Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              new Container(
-                child: new Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: showButtons(),
-                ),
-              ),
+              showButtons(),
             ],
           ),
         ),

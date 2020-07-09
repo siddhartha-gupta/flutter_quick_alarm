@@ -1,11 +1,11 @@
 part of quick_alarm;
 
-class Scheduler {
+class SchedulerService {
   setupAlarm() async {
     print('Setting up alarm!');
 
     AppEvents.setAlarmState('IN_PLACE');
-    CountDownTimer.start();
+    CountDownService.start();
 
     final success = await AndroidAlarmManager.oneShot(
       Duration(minutes: AppConst.TIMER_MINUTES),
@@ -27,7 +27,7 @@ class Scheduler {
 
   buzzAlarm() {
     AppEvents.setAlarmState('BUZZING');
-    CountDownTimer.stop();
+    CountDownService.stop();
 
     FlutterRingtonePlayer.play(
       android: AndroidSounds.ringtone,

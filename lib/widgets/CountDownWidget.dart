@@ -8,23 +8,23 @@ class CountDownWidget extends StatefulWidget {
 }
 
 class CountDownWidgetState extends State<CountDownWidget> {
+  ReceivePort receivePort = ReceivePort();
   int remainingTime = 0;
 
   @override
   void initState() {
     super.initState();
 
-    CountDownTimer.receivePort.listen((data) {
-      debugPrint('RECEIVE: ' + data + ', ');
-      setState(() {
-        remainingTime = int.tryParse(data);
-      });
+    IsolateNameServer.registerPortWithName(
+        receivePort.sendPort, AppConst.TIMER_PORT_NAME);
+    receivePort.listen((data) {
+      remainingTime = int.tryParse(data);
     });
   }
 
   @override
   void dispose() {
-    CountDownTimer.receivePort.close();
+    receivePort.close();
 
     super.dispose();
   }
