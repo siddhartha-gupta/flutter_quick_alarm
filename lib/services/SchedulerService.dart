@@ -33,19 +33,19 @@ class SchedulerService {
     StorageService.setInteger('timestamp', 0);
 
     print('buzzAlarm');
-    /* FlutterRingtonePlayer.play(
+    FlutterRingtonePlayer.play(
       android: AndroidSounds.ringtone,
       ios: IosSounds.glass,
       looping: true,
       volume: 1.0,
       asAlarm: true,
-    ); */
+    );
   }
 
   stopAlarm() {
     AppEvents.setAlarmState('NO_ALARM');
     print('stopAlarm');
 
-    // FlutterRingtonePlayer.stop();
+    FlutterRingtonePlayer.stop();
   }
 }
