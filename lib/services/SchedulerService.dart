@@ -12,7 +12,7 @@ class SchedulerService {
 
     await AndroidAlarmManager.oneShot(
       Duration(minutes: AppConst.TIMER_MINUTES),
-      42,
+      AppConst.MAIN_PORT_ID,
       callback,
       wakeup: true,
       exact: true,
@@ -29,10 +29,11 @@ class SchedulerService {
   }
 
   buzzAlarm() {
+    print('buzzAlarm');
+
     AppEvents.setAlarmState('BUZZING');
     StorageService.setInteger('timestamp', 0);
 
-    print('buzzAlarm');
     FlutterRingtonePlayer.play(
       android: AndroidSounds.ringtone,
       ios: IosSounds.glass,
@@ -43,13 +44,23 @@ class SchedulerService {
   }
 
   stopAlarm() {
-    AppEvents.setAlarmState('NO_ALARM');
     print('stopAlarm');
 
+    AppEvents.setAlarmState('NO_ALARM');
     FlutterRingtonePlayer.stop();
   }
 
+  cancelAlarm() {
+    print('cancelAlarm');
+
+    AndroidAlarmManager.cancel(AppConst.MAIN_PORT_ID);
+    StorageService.setInteger('timestamp', 0);
+    AppEvents.setAlarmState('NO_ALARM');
+  }
+
   cleanUp() {
+    print('cleanUp');
+
     int timestamp = StorageService.getInteger('timestamp') ?? 0;
 
     if (timestamp > 0 && timestamp < DateTime.now().millisecondsSinceEpoch) {

@@ -8,6 +8,7 @@ class CountDownWidget extends StatefulWidget {
 }
 
 class CountDownWidgetState extends State<CountDownWidget> {
+  Timer _timer;
   int remainingTime = 0;
 
   @override
@@ -18,7 +19,7 @@ class CountDownWidgetState extends State<CountDownWidget> {
   }
 
   runTimer() {
-    Timer.periodic(
+    _timer = Timer.periodic(
       Duration(seconds: 1),
       (timer) {
         int diff = (StorageService.getInteger('timestamp') -
@@ -27,7 +28,7 @@ class CountDownWidgetState extends State<CountDownWidget> {
 
         if (diff == 1) {
           print('cancelling timer');
-          timer.cancel();
+          _timer.cancel();
         }
         setState(() {
           remainingTime = diff;
@@ -38,6 +39,8 @@ class CountDownWidgetState extends State<CountDownWidget> {
 
   @override
   void dispose() {
+    _timer.cancel();
+
     super.dispose();
   }
 

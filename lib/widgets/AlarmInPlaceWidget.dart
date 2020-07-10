@@ -22,6 +22,21 @@ class AlarmInPlaceWidget extends StatelessWidget {
             ),
           ),
           CountDownWidget(),
+          new Padding(
+            padding: EdgeInsets.only(
+              bottom: 20,
+            ),
+          ),
+          new RaisedButton(
+            child: Icon(
+              Icons.cancel,
+              size: 100.0,
+            ),
+            onPressed: () {
+              SchedulerService().cancelAlarm();
+            },
+            color: Colors.white,
+          ),
         ],
       ),
     );
