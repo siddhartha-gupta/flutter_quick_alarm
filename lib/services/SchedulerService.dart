@@ -10,19 +10,19 @@ class SchedulerService {
     AppEvents.setAlarmState('IN_PLACE');
     StorageService.setInteger('timestamp', timer);
 
-    final success = await AndroidAlarmManager.oneShot(
+    await AndroidAlarmManager.oneShot(
       Duration(minutes: AppConst.TIMER_MINUTES),
       42,
       callback,
       wakeup: true,
       exact: true,
     );
-    print(success);
   }
 
   static callback() async {
     SendPort sendPort =
         IsolateNameServer.lookupPortByName(AppConst.MAIN_PORT_NAME);
+
     if (sendPort != null) {
       sendPort.send('DONE');
     }
@@ -47,5 +47,14 @@ class SchedulerService {
     print('stopAlarm');
 
     FlutterRingtonePlayer.stop();
+  }
+
+  cleanUp() {
+    int timestamp = StorageService.getInteger('timestamp') ?? 0;
+
+    if (timestamp > 0 && timestamp < DateTime.now().millisecondsSinceEpoch) {
+      AppEvents.setAlarmState('NO_ALARM');
+      StorageService.setInteger('timestamp', 0);
+    }
   }
 }

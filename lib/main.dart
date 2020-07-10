@@ -40,6 +40,8 @@ class QuickAlarmState extends State<QuickAlarm> {
   void initState() {
     super.initState();
 
+    SchedulerService().cleanUp();
+
     IsolateNameServer.registerPortWithName(
         receivePort1.sendPort, AppConst.MAIN_PORT_NAME);
 
