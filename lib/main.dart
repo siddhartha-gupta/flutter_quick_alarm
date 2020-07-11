@@ -10,15 +10,19 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 part './AppConst.dart';
 part './AppEvents.dart';
-part 'services/SchedulerService.dart';
-part 'services/StorageService.dart';
+
 part 'widgets/CountDownWidget.dart';
 part 'widgets/AlarmInPlaceWidget.dart';
 part 'widgets/SetupAlarmWidget.dart';
 part 'widgets/StopAlarmWidget.dart';
+
+part 'services/SchedulerService.dart';
+part 'services/StorageService.dart';
+part 'services/NotificationManagerService.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -41,6 +45,8 @@ class QuickAlarm extends StatefulWidget {
 class QuickAlarmState extends State<QuickAlarm> {
   ReceivePort receivePort1 = ReceivePort();
   StreamSubscription<String> alarmStateStream;
+  NotificationManagerService notificationManagerService =
+      new NotificationManagerService();
   String alarmState = 'NO_ALARM';
 
   @override
@@ -51,6 +57,9 @@ class QuickAlarmState extends State<QuickAlarm> {
         receivePort1.sendPort, AppConst.MAIN_PORT_NAME);
 
     receivePort1.listen((v) {
+      notificationManagerService.initNotificationManager();
+      notificationManagerService.showNotificationWithDefaultSound(
+          "Times up", "Please complete your task");
       SchedulerService().buzzAlarm();
     });
 
