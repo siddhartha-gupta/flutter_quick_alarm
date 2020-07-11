@@ -7,11 +7,6 @@ class AppEvents {
   static void initialize() {
     alarmState = new PublishSubject<String>();
     countdownTimer = new PublishSubject<int>();
-
-    StorageService.initialize().then((value) {
-      AppEvents.setAlarmState(
-          StorageService.getString('alarmState') ?? 'NO_ALARM');
-    });
   }
 
   static void setAlarmState(String state) {

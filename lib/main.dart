@@ -25,6 +25,12 @@ void main() async {
   await AndroidAlarmManager.initialize();
   AppEvents.initialize();
   runApp(QuickAlarm());
+
+  StorageService.initialize().then((value) {
+    SchedulerService().cleanUp();
+    AppEvents.setAlarmState(
+        StorageService.getString('alarmState') ?? 'NO_ALARM');
+  });
 }
 
 class QuickAlarm extends StatefulWidget {
@@ -40,8 +46,6 @@ class QuickAlarmState extends State<QuickAlarm> {
   @override
   void initState() {
     super.initState();
-
-    SchedulerService().cleanUp();
 
     IsolateNameServer.registerPortWithName(
         receivePort1.sendPort, AppConst.MAIN_PORT_NAME);
