@@ -5,14 +5,16 @@ class AlarmInPlaceWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    int timer = StorageService.getInteger('currentTimerMinutes');
+
     return new Container(
       child: new Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
-            'Alarm placed for ${AppConst.TIMER_MINUTES} mins',
+            'Alarm placed for $timer mins',
             style: TextStyle(
-              color: Colors.amber,
+              color: Colors.blueAccent,
               fontSize: 25.0,
             ),
           ),
@@ -36,6 +38,18 @@ class AlarmInPlaceWidget extends StatelessWidget {
               SchedulerService().cancelAlarm();
             },
             color: Colors.white,
+          ),
+          new Padding(
+            padding: EdgeInsets.only(
+              bottom: 20,
+            ),
+          ),
+          new Text(
+            'Cancel alarm',
+            style: TextStyle(
+              color: Colors.blueGrey,
+              fontSize: 20.0,
+            ),
           ),
         ],
       ),

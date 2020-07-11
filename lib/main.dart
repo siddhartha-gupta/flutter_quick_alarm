@@ -82,7 +82,6 @@ class QuickAlarmState extends State<QuickAlarm> {
     return new MaterialApp(
       title: 'Quick alarm',
       home: new Scaffold(
-        backgroundColor: Colors.grey[900],
         body: Center(
           child: new Row(
             mainAxisAlignment: MainAxisAlignment.center,

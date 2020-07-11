@@ -1,17 +1,17 @@
 part of quick_alarm;
 
 class SchedulerService {
-  setupAlarm() async {
+  setupAlarm(int val) async {
     print('Setting up alarm!');
 
-    int timer = DateTime.now().millisecondsSinceEpoch +
-        (AppConst.TIMER_MINUTES * 60 * 1000);
+    int timer = DateTime.now().millisecondsSinceEpoch + (val * 60 * 1000);
 
     AppEvents.setAlarmState('IN_PLACE');
     StorageService.setInteger('timestamp', timer);
+    StorageService.setInteger('currentTimerMinutes', val);
 
     await AndroidAlarmManager.oneShot(
-      Duration(minutes: AppConst.TIMER_MINUTES),
+      Duration(minutes: val),
       AppConst.MAIN_PORT_ID,
       callback,
       wakeup: true,

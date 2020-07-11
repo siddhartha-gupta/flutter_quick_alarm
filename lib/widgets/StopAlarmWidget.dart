@@ -27,7 +27,7 @@ class StopAlarmWidget extends StatelessWidget {
           new Text(
             'Stop alarm',
             style: TextStyle(
-              color: Colors.amber,
+              color: Colors.blueAccent,
               fontSize: 40.0,
             ),
           ),

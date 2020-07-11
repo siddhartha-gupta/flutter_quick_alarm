@@ -49,7 +49,7 @@ class CountDownWidgetState extends State<CountDownWidget> {
     return Text(
       'Remaining: $remainingTime seconds',
       style: TextStyle(
-        color: Colors.amber,
+        color: Colors.amber[900],
         fontSize: 25.0,
       ),
     );
