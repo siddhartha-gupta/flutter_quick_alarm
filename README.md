@@ -1,6 +1,6 @@
 # quick_alarm
 
-App create quick alarms
+App create quick alarms - https://play.google.com/store/apps/details?id=com.sid.quick_alarm
 
 ## Getting Started
 
